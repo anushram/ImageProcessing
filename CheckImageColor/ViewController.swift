@@ -63,9 +63,11 @@ class ViewController: UIViewController {
         let bitsPerPixel:UInt = 32
         //assert(pixels.count == Int((width * height)) )
         var data = pixels // Copy to mutable []
+        let abc = CFDataCreateMutable(kCFAllocatorDefault, data.count * MemoryLayout<Any>.size)
         let providerRef = CGDataProvider(
             data: NSData(bytes: &data, length: data.count * MemoryLayout<Any>.size)
                 )
+        CFDataCreateMutable(kCFAllocatorDefault, data.count * MemoryLayout<Any>.size)
         //let providerRef = CGDataProvider(data: data as! CFData)
         //let nnnn = cgImage.dataProvider!
         let tt = (cgImage.width * Int(0.1)) * (cgImage.height * Int(0.1))
@@ -74,11 +76,11 @@ class ViewController: UIViewController {
         //((cgImage.height * (Int(1.99))))
         //(cgImage.bytesPerRow)
         let cgim = CGImage(
-            width: 2160,
-            height: 1824,
+            width: 1080,
+            height: 912,
             bitsPerComponent: Int(bitsPerComponent),
             bitsPerPixel: Int(bitsPerPixel),
-            bytesPerRow: 8640,
+            bytesPerRow: 4320,
             space: rgbColorSpace,
             bitmapInfo: bitmapInfo,
             provider: providerRef!,
@@ -116,10 +118,14 @@ class ViewController: UIViewController {
                 //let picc3 = PixelData.init(r: 255, g: 0, b: 0)
                 let piccOne = PixelData.init(r: data[pixelInfo+2], g: data[pixelInfo+1], b: data[pixelInfo], a: data[pixelInfo+3])
                 //let piccOne = PixelData.init(a: 255, r: data[pixelInfo], g: data[pixelInfo+1], b: data[pixelInfo+2])
-                piii.append(piccOne)
-                piii.append(piccOne)
+                //piii.append(piccOne)
+                //piii.append(piccOne)
+                
                 newOne.append(piccOne)
-                newOne.append(piccOne)
+//                newOne.append(piccOne)
+//                newOne.append(piccOne)
+//                newOne.append(piccOne)
+                
 //                let r = CGFloat(data[pixelInfo])
 //                let g = CGFloat(data[pixelInfo+1])
 //                let b = CGFloat(data[pixelInfo+2])
