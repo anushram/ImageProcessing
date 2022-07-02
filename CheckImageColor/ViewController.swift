@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UINavigationControllerDelegate {
     
     var img: UIImage?
     var pixelData: CFData?
@@ -41,9 +41,26 @@ class ViewController: UIViewController {
         var cgggggimmmm = immmmmmmm.cgImage
         print("total sizeees=",cgggggimmmm?.width, cgggggimmmm?.height)
         iiiimmmmm.image = immmmmmmm
+        UIImageWriteToSavedPhotosAlbum(immmmmmmm, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
         //let processedImage = img?.processPixels(in: img!)
        // iiiimmmmm.image = processedImage
     }
+    
+    //MARK: - Add image to Library
+        @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+            if let error = error {
+                // we got back an error!
+                showAlertWith(title: "Save error", message: error.localizedDescription)
+            } else {
+                showAlertWith(title: "Saved!", message: "Your image has been saved to your photos.")
+            }
+        }
+
+        func showAlertWith(title: String, message: String){
+            let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        }
     
     public struct PixelData {
         var r:UInt8
@@ -76,11 +93,11 @@ class ViewController: UIViewController {
         //((cgImage.height * (Int(1.99))))
         //(cgImage.bytesPerRow)
         let cgim = CGImage(
-            width: 1080,
-            height: 912,
+            width: 270,
+            height: 228,
             bitsPerComponent: Int(bitsPerComponent),
             bitsPerPixel: Int(bitsPerPixel),
-            bytesPerRow: 4320,
+            bytesPerRow: 1080,
             space: rgbColorSpace,
             bitmapInfo: bitmapInfo,
             provider: providerRef!,
@@ -105,60 +122,23 @@ class ViewController: UIViewController {
             for j in stride(from: 0 as CGFloat, to: (width), by: +1 as CGFloat) {
                 
                 let cgPoint = CGPoint.init(x: i, y: j)
-                //let colorpp = img!.getPixelColor(pos: cgPoint, pixelData: pixelData!)
-               // print("sssss\(i) \(j)", colorpp)
                 
                 let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
 
                 let pixelInfo: Int = ((Int(width) * Int(i)) + Int(j)) * 4
                 
-                //let picc = PixelData.init(r: 14, g: 45, b: 23)
-                //let picc1 = PixelData.init(r: 255, g: 0, b: 0)
-                //let picc2 = PixelData.init(r: 0, g: 255, b: 255)
-                //let picc3 = PixelData.init(r: 255, g: 0, b: 0)
                 let piccOne = PixelData.init(r: data[pixelInfo+2], g: data[pixelInfo+1], b: data[pixelInfo], a: data[pixelInfo+3])
-                //let piccOne = PixelData.init(a: 255, r: data[pixelInfo], g: data[pixelInfo+1], b: data[pixelInfo+2])
-                //piii.append(piccOne)
-                //piii.append(piccOne)
+        
+                if j.truncatingRemainder(dividingBy: 4) == 0 {
+                    newOne.append(piccOne)
+                }
                 
-                newOne.append(piccOne)
-//                newOne.append(piccOne)
-//                newOne.append(piccOne)
-//                newOne.append(piccOne)
-                
-//                let r = CGFloat(data[pixelInfo])
-//                let g = CGFloat(data[pixelInfo+1])
-//                let b = CGFloat(data[pixelInfo+2])
-//                let a = CGFloat(data[pixelInfo+3])
-                
-//                piii.append(picc1)
-//                piii.append(picc2)
-//                piii.append(picc3)
-//                piii.append(picc)
-//                piii.append(picc1)
-//                piii.append(picc2)
-//                piii.append(picc3)
-               // piii.append(picc)
-              //  piii.append(picc)
-               // piii.append(picc)
-               // piii.append(picc)
-//                piii.append(picc)
-//                piii.append(picc)
-//                piii.append(picc)
-  //              let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
-  //              let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
-  //              let b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
-  //              let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
-                
-                //let pixelBuffer = data.bindMemory(to: UIColor.self, capacity: width * height)
-          
-              
-                
-              
                 
             }
+            if i.truncatingRemainder(dividingBy: 4) == 0 {
+                piii.append(contentsOf: newOne)
+            }
             
-            piii.append(contentsOf: newOne)
         }
         
     }
