@@ -93,11 +93,11 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         //((cgImage.height * (Int(1.99))))
         //(cgImage.bytesPerRow)
         let cgim = CGImage(
-            width: 270,
-            height: 228,
+            width: Int(540/2),
+            height: Int(456/2),
             bitsPerComponent: Int(bitsPerComponent),
             bitsPerPixel: Int(bitsPerPixel),
-            bytesPerRow: 1080,
+            bytesPerRow: Int(2160/2),
             space: rgbColorSpace,
             bitmapInfo: bitmapInfo,
             provider: providerRef!,
@@ -115,11 +115,159 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         
         
         
-        for i in stride(from: 0 as CGFloat, to: (height), by: +1 as CGFloat) {
+        for i in stride(from: 0 as CGFloat, to: (height), by: +4 as CGFloat) {
             
             var newOne = [PixelData]()
             
-            for j in stride(from: 0 as CGFloat, to: (width), by: +1 as CGFloat) {
+            for j in stride(from: 0 as CGFloat, to: (width), by: +4 as CGFloat) {
+                
+                let cgPoint = CGPoint.init(x: i, y: j)
+                
+                let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+                //As per row and column, we get all pixel values
+                var totalPixelInfo = [Int]()
+                for widthInc in 0..<4 {
+                    for rowInc in 0..<4 {
+                        let pixelInfo: Int = ((Int(width) * Int(i + CGFloat(widthInc))) + Int(j + CGFloat(rowInc))) * 4
+                        totalPixelInfo.append(pixelInfo)
+                    }
+                }
+                
+                //Arrange color by pixel data
+                
+                var totalPixelData = [PixelData]()
+                for pixelInfo in totalPixelInfo {
+                    let pixelData = PixelData.init(r: data[pixelInfo+2], g: data[pixelInfo+1], b: data[pixelInfo], a: data[pixelInfo+3])
+                    totalPixelData.append(pixelData)
+                }
+                
+                //Add total red, blue, green, alpha
+                var redTotal: Int = 0
+                var blueTotal: Int = 0
+                var greenTotal: Int = 0
+                var alphaTotal: Int = 0
+                for pixel in totalPixelData {
+                    redTotal += Int(pixel.r)
+                    greenTotal += Int(pixel.g)
+                    blueTotal += Int(pixel.b)
+                    alphaTotal += Int(pixel.a)
+                }
+                
+                let avgR = UInt8(redTotal/16)
+                let avgG = UInt8(greenTotal/16)
+                let avgB = UInt8(blueTotal/16)
+                let avgA = UInt8(alphaTotal/16)
+                
+                let picc = PixelData.init(r: avgR, g: avgG, b: avgB, a: avgA)
+        
+                newOne.append(picc)
+
+//                let pixelInfo: Int = ((Int(width) * Int(i)) + Int(j)) * 4
+//                let pixelInfoOne: Int = ((Int(width) * Int(i)) + Int(j + 1)) * 4
+//                let pixelInfoTwo: Int = ((Int(width) * Int(i)) + Int(j + 2)) * 4
+//                let pixelInfoThree: Int = ((Int(width) * Int(i)) + Int(j + 3)) * 4
+//
+//                let pixelInfoRowOne: Int = ((Int(width) * Int(i + 1)) + Int(j)) * 4
+//                let pixelInfoRowTwo: Int = ((Int(width) * Int(i + 1)) + Int(j + 1)) * 4
+//                let pixelInfoRowthree: Int = ((Int(width) * Int(i + 1)) + Int(j + 2)) * 4
+//                let pixelInfoRowFour: Int = ((Int(width) * Int(i + 1)) + Int(j + 3)) * 4
+//
+//                let pixelInfoRow2: Int = ((Int(width) * Int(i + 2)) + Int(j)) * 4
+//                let pixelInfoRowTwo2: Int = ((Int(width) * Int(i + 2)) + Int(j + 1)) * 4
+//                let pixelInfoRowthree2: Int = ((Int(width) * Int(i + 2)) + Int(j + 2)) * 4
+//                let pixelInfoRowFour2: Int = ((Int(width) * Int(i + 2)) + Int(j + 3)) * 4
+//
+//                let pixelInfoRowOne3: Int = ((Int(width) * Int(i + 3)) + Int(j)) * 4
+//                let pixelInfoRowTwo3: Int = ((Int(width) * Int(i + 3)) + Int(j + 1)) * 4
+//                let pixelInfoRowthree3: Int = ((Int(width) * Int(i + 3)) + Int(j + 2)) * 4
+//                let pixelInfoRowFour3: Int = ((Int(width) * Int(i + 3)) + Int(j + 3)) * 4
+//
+//
+//
+//                let piccOne = PixelData.init(r: data[pixelInfo+2], g: data[pixelInfo+1], b: data[pixelInfo], a: data[pixelInfo+3])
+//
+//                let piccTwo = PixelData.init(r: data[pixelInfoOne+2], g: data[pixelInfoOne+1], b: data[pixelInfoOne], a: data[pixelInfoOne+3])
+//
+//                let piccThree = PixelData.init(r: data[pixelInfoTwo+2], g: data[pixelInfoTwo+1], b: data[pixelInfoTwo], a: data[pixelInfoTwo+3])
+//
+//                let piccFour = PixelData.init(r: data[pixelInfoThree+2], g: data[pixelInfoThree+1], b: data[pixelInfoThree], a: data[pixelInfoThree+3])
+//
+//
+//
+//                let piccOne1 = PixelData.init(r: data[pixelInfoRowOne+2], g: data[pixelInfoRowOne+1], b: data[pixelInfoRowOne], a: data[pixelInfoRowOne+3])
+//
+//                let piccTwo1 = PixelData.init(r: data[pixelInfoRowTwo+2], g: data[pixelInfoRowTwo+1], b: data[pixelInfoRowTwo], a: data[pixelInfoRowTwo+3])
+//
+//                let piccThree1 = PixelData.init(r: data[pixelInfoRowthree+2], g: data[pixelInfoRowthree+1], b: data[pixelInfoRowthree], a: data[pixelInfoRowthree+3])
+//
+//                let piccFour1 = PixelData.init(r: data[pixelInfoRowFour+2], g: data[pixelInfoRowFour+1], b: data[pixelInfoRowFour], a: data[pixelInfoRowFour+3])
+//
+//
+//                //3
+//                let piccOne2 = PixelData.init(r: data[pixelInfoRow2+2], g: data[pixelInfoRow2+1], b: data[pixelInfoRow2], a: data[pixelInfoRow2+3])
+//
+//                let piccTwo2 = PixelData.init(r: data[pixelInfoRowTwo2+2], g: data[pixelInfoRowTwo2+1], b: data[pixelInfoRowTwo2], a: data[pixelInfoRowTwo2+3])
+//
+//                let piccThree2 = PixelData.init(r: data[pixelInfoRowthree2+2], g: data[pixelInfoRowthree2+1], b: data[pixelInfoRowthree2], a: data[pixelInfoRowthree2+3])
+//
+//                let piccFour2 = PixelData.init(r: data[pixelInfoRowFour2+2], g: data[pixelInfoRowFour2+1], b: data[pixelInfoRowFour2], a: data[pixelInfoRowFour2+3])
+//
+//                //4
+//
+//                let piccOne3 = PixelData.init(r: data[pixelInfoRowOne3+2], g: data[pixelInfoRowOne3+1], b: data[pixelInfoRowOne3], a: data[pixelInfoRowOne3+3])
+//
+//                let piccTwo3 = PixelData.init(r: data[pixelInfoRowTwo3+2], g: data[pixelInfoRowTwo3+1], b: data[pixelInfoRowTwo3], a: data[pixelInfoRowTwo3+3])
+//
+//                let piccThree3 = PixelData.init(r: data[pixelInfoRowthree3+2], g: data[pixelInfoRowthree3+1], b: data[pixelInfoRowthree3], a: data[pixelInfoRowthree3+3])
+//
+//                let piccFour3 = PixelData.init(r: data[pixelInfoRowFour3+2], g: data[pixelInfoRowFour3+1], b: data[pixelInfoRowFour3], a: data[pixelInfoRowFour3+3])
+//                //redSplit
+//                let aRed1 = Int(piccOne.r) + Int(piccTwo.r) + Int(piccThree.r) + Int(piccFour.r) + Int(piccOne1.r) + Int(piccTwo1.r) + Int(piccThree1.r)
+//
+//                let aRed2 = Int(piccFour1.r) + Int(piccOne2.r) + Int(piccTwo2.r) + Int(piccThree2.r) + Int(piccFour2.r) + Int(piccOne3.r) + Int(piccTwo3.r) + Int(piccThree3.r) + Int(piccFour3.r)
+//
+//                let aRed = Int((aRed1 + aRed2) / 16)
+//
+//                let aGreen1 = Int(piccOne.g) + Int(piccTwo.g) + Int(piccThree.g) + Int(piccFour.g) + Int(piccOne1.g) + Int(piccTwo1.g) + Int(piccThree1.g)
+//
+//                let aGreen2 = Int(piccFour1.g) + Int(piccOne2.g) + Int(piccTwo2.g) + Int(piccThree2.g) + Int(piccFour2.g) + Int(piccOne3.g) + Int(piccTwo3.g) + Int(piccThree3.g) + Int(piccFour3.g)
+//
+//                let aGreen = Int((aGreen1 + aGreen2) / 16)
+//
+//
+//                let aBlue1 = Int(piccOne.b) + Int(piccTwo.b) + Int(piccThree.b) + Int(piccFour.b) + Int(piccOne1.b) + Int(piccTwo1.b) + Int(piccThree1.b)
+//
+//                let aBlue2 = Int(piccFour1.b) + Int(piccOne2.b) + Int(piccTwo2.b) + Int(piccThree2.b) + Int(piccFour2.b) + Int(piccOne3.b) + Int(piccTwo3.b) + Int(piccThree3.b) + Int(piccFour3.b)
+//
+//                let aBlue = Int((aBlue1 + aBlue2) / 16)
+//
+//                let alpha1 = Int(piccOne.a) + Int(piccTwo.a) + Int(piccThree.a) + Int(piccFour.a) + Int(piccOne1.a) + Int(piccTwo1.a) + Int(piccThree1.a)
+//
+//                let alpha2 = Int(piccFour1.a) + Int(piccOne2.a) + Int(piccTwo2.a) + Int(piccThree2.a) + Int(piccFour2.a) + Int(piccOne3.a) + Int(piccTwo3.a) + Int(piccThree3.a) + Int(piccFour3.a)
+//
+//                let alpha = Int((alpha1 + alpha2) / 16)
+//
+//                let picc = PixelData.init(r: UInt8(aRed), g: UInt8(aGreen), b: UInt8(aBlue), a: UInt8(alpha))
+//
+//                    newOne.append(picc)
+                
+                
+            }
+                piii.append(contentsOf: newOne)
+            
+        }
+        
+    }
+    /*Enlarge Image
+    func GetTotalColors(height: CGFloat, width: CGFloat) {
+        
+        
+        
+        for i in stride(from: 0 as CGFloat, to: (height), by: +2 as CGFloat) {
+            
+            var newOne = [PixelData]()
+            
+            for j in stride(from: 0 as CGFloat, to: (width), by: +2 as CGFloat) {
                 
                 let cgPoint = CGPoint.init(x: i, y: j)
                 
@@ -129,20 +277,16 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
                 
                 let piccOne = PixelData.init(r: data[pixelInfo+2], g: data[pixelInfo+1], b: data[pixelInfo], a: data[pixelInfo+3])
         
-                if j.truncatingRemainder(dividingBy: 4) == 0 {
                     newOne.append(piccOne)
-                }
                 
                 
             }
-            if i.truncatingRemainder(dividingBy: 4) == 0 {
                 piii.append(contentsOf: newOne)
-            }
             
         }
         
     }
-
+*/
 }
 
 
