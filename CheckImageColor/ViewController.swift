@@ -93,11 +93,11 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         //((cgImage.height * (Int(1.99))))
         //(cgImage.bytesPerRow)
         let cgim = CGImage(
-            width: Int(540/2),
-            height: Int(456/2),
+            width: Int(2),
+            height: Int(2),
             bitsPerComponent: Int(bitsPerComponent),
             bitsPerPixel: Int(bitsPerPixel),
-            bytesPerRow: Int(2160/2),
+            bytesPerRow: Int(72),
             space: rgbColorSpace,
             bitmapInfo: bitmapInfo,
             provider: providerRef!,
@@ -115,21 +115,27 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         
         
         
-        for i in stride(from: 0 as CGFloat, to: (height), by: +4 as CGFloat) {
+        for i in stride(from: 0 as CGFloat, to: (height), by: +8 as CGFloat) {
             
             var newOne = [PixelData]()
             
-            for j in stride(from: 0 as CGFloat, to: (width), by: +4 as CGFloat) {
+            for j in stride(from: 0 as CGFloat, to: (width), by: +8 as CGFloat) {
                 
                 let cgPoint = CGPoint.init(x: i, y: j)
                 
                 let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
                 //As per row and column, we get all pixel values
                 var totalPixelInfo = [Int]()
-                for widthInc in 0..<4 {
-                    for rowInc in 0..<4 {
+                for widthInc in 0..<8 {
+                    for rowInc in 0..<8 {
                         let pixelInfo: Int = ((Int(width) * Int(i + CGFloat(widthInc))) + Int(j + CGFloat(rowInc))) * 4
                         totalPixelInfo.append(pixelInfo)
+                        let ccc = Int(i + CGFloat(widthInc)) + (Int(j + CGFloat(rowInc)) * 4)
+                        print("piiieeee0=",pixelInfo)
+                        if ((j * 536) / 536) > j {
+                            print("piiieeee=",pixelInfo)
+                        }
+                        
                     }
                 }
                 
@@ -153,10 +159,10 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
                     alphaTotal += Int(pixel.a)
                 }
                 
-                let avgR = UInt8(redTotal/16)
-                let avgG = UInt8(greenTotal/16)
-                let avgB = UInt8(blueTotal/16)
-                let avgA = UInt8(alphaTotal/16)
+                let avgR = UInt8(redTotal/64)
+                let avgG = UInt8(greenTotal/64)
+                let avgB = UInt8(blueTotal/64)
+                let avgA = UInt8(alphaTotal/64)
                 
                 let picc = PixelData.init(r: avgR, g: avgG, b: avgB, a: avgA)
         
