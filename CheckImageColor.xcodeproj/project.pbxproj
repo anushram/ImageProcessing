@@ -15,6 +15,7 @@
 		B71E431E27C8A88B00E2DF80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B71E431C27C8A88B00E2DF80 /* LaunchScreen.storyboard */; };
 		B71E432927C8A88C00E2DF80 /* CheckImageColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71E432827C8A88C00E2DF80 /* CheckImageColorTests.swift */; };
 		B71E433427C8A88C00E2DF80 /* CheckImageColorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71E433327C8A88C00E2DF80 /* CheckImageColorUITests.swift */; };
+		FCDF1BBF287C6B6F00DE1D76 /* struct.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDF1BBE287C6B6F00DE1D76 /* struct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		B71E432F27C8A88C00E2DF80 /* CheckImageColorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheckImageColorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B71E433327C8A88C00E2DF80 /* CheckImageColorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckImageColorUITests.swift; sourceTree = "<group>"; };
 		B71E433527C8A88C00E2DF80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FCDF1BBE287C6B6F00DE1D76 /* struct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = struct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				B71E431A27C8A88B00E2DF80 /* Assets.xcassets */,
 				B71E431C27C8A88B00E2DF80 /* LaunchScreen.storyboard */,
 				B71E431F27C8A88B00E2DF80 /* Info.plist */,
+				FCDF1BBE287C6B6F00DE1D76 /* struct.swift */,
 			);
 			path = CheckImageColor;
 			sourceTree = "<group>";
@@ -258,6 +261,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCDF1BBF287C6B6F00DE1D76 /* struct.swift in Sources */,
 				B71E431627C8A88700E2DF80 /* ViewController.swift in Sources */,
 				B71E431227C8A88700E2DF80 /* AppDelegate.swift in Sources */,
 				B71E431427C8A88700E2DF80 /* SceneDelegate.swift in Sources */,

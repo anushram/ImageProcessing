@@ -7,12 +7,15 @@
 
 import UIKit
 
-class ViewController: UIViewController, UINavigationControllerDelegate {
+class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     var img: UIImage?
     var pixelData: CFData?
     
     @IBOutlet weak var iiiimmmmm: UIImageView!
+    @IBOutlet weak var sizeImg: UILabel!
+    @IBOutlet weak var cusSlider: UISlider!
+    var imagePicker = UIImagePickerController()
     
     var piii = [PixelData]()
     
@@ -36,13 +39,13 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         let colorpp = img?.getPixelColor(pos: cgPoint, pixelData: self.pixelData!)
         print("sssss",colorpp)
         
-        self.GetTotalColors(height: CGFloat(cccGImage!.height), width: CGFloat(cccGImage!.width))
-        let immmmmmmm = self.imageFromARGB32Bitmap(pixels: self.piii, width: UInt(cccGImage!.width), height: UInt(cccGImage!.height), cgImage: cccGImage!)
-        var cgggggimmmm = immmmmmmm.cgImage
-        print("total sizeees=",cgggggimmmm?.width, cgggggimmmm?.height)
-        iiiimmmmm.image = immmmmmmm
-        UIImageWriteToSavedPhotosAlbum(immmmmmmm, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-        //let processedImage = img?.processPixels(in: img!)
+//        self.GetTotalColors(height: CGFloat(cccGImage!.height), width: CGFloat(cccGImage!.width), sliderValue: 1)
+//        let immmmmmmm = self.imageFromARGB32Bitmap(pixels: self.piii, width: UInt(cccGImage!.width), height: UInt(cccGImage!.height), cgImage: cccGImage!)
+//        var cgggggimmmm = immmmmmmm.cgImage
+//        print("total sizeees=",cgggggimmmm?.width, cgggggimmmm?.height)
+//        iiiimmmmm.image = immmmmmmm
+        //UIImageWriteToSavedPhotosAlbum(immmmmmmm, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+       // let processedImage = img?.processPixels(in: img!)
        // iiiimmmmm.image = processedImage
     }
     
@@ -61,6 +64,55 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
             ac.addAction(UIAlertAction(title: "OK", style: .default))
             present(ac, animated: true)
         }
+    @IBAction func Chooseclicked() {
+
+            if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
+                print("Button capture")
+
+                imagePicker.delegate = self
+                imagePicker.sourceType = .savedPhotosAlbum
+                imagePicker.allowsEditing = false
+
+                present(imagePicker, animated: true, completion: nil)
+            }
+        }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]){
+            if let img = info[.originalImage] as? UIImage {
+                
+                iiiimmmmm.isHidden = false
+                iiiimmmmm.image = img
+                var cgimg = img.cgImage
+                pixelData = cgimg!.dataProvider!.data
+                print("total sizeees=",cgimg?.width, cgimg?.height)
+                sizeImg.text = "\(cgimg!.width) X \(cgimg!.height)"
+                self.dismiss(animated: true, completion: { () -> Void in
+
+                })
+            }
+            
+        }
+    
+    @IBAction func doneAction(sender: UIButton){
+        let cgimg = iiiimmmmm.image!.cgImage
+        let sValue = Int(cusSlider.value)
+        self.GetTotalColors(height: CGFloat(cgimg!.height), width: CGFloat(cgimg!.width), sliderValue: sValue)
+        let immmmmmmm = self.imageFromARGB32Bitmap(pixels: self.piii, width: CGFloat(cgimg!.width/sValue), height: CGFloat(cgimg!.height/sValue), cgImage: cgimg!)
+        let cgimgModified = immmmmmmm.cgImage
+        print("total sizeees=",cgimgModified!.width, cgimgModified!.height)
+        sizeImg.text = "\(cgimgModified!.width) X \(cgimgModified!.height)"
+        iiiimmmmm.image = immmmmmmm
+        UIImageWriteToSavedPhotosAlbum(immmmmmmm, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    
+    @IBAction func sliderValueChanged(slider: UISlider){
+        
+        slider.value = slider.value.rounded()
+        print("slider=",slider.value)
+    }
+    @IBAction func sliderValueTarget(slider: UISlider){
+        print("slider1=",slider.value)
+    }
     
     public struct PixelData {
         var r:UInt8
@@ -74,7 +126,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     
     private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
         .union(.byteOrder32Little)
-    public func imageFromARGB32Bitmap(pixels:[PixelData], width:UInt, height:UInt, cgImage: CGImage)->UIImage{
+    public func imageFromARGB32Bitmap(pixels:[PixelData], width:CGFloat, height:CGFloat, cgImage: CGImage)->UIImage{
         
         let bitsPerComponent:UInt = 8
         let bitsPerPixel:UInt = 32
@@ -88,11 +140,11 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         //CFDataCreateMutable(kCFAllocatorDefault, data.count * MemoryLayout<Any>.size)
 
         let cgim = CGImage(
-            width: Int(ceil(1080/17)),
-            height: Int(ceil(912/17)),
+            width: Int(ceil(width)),
+            height: Int(ceil(height)),
             bitsPerComponent: Int(bitsPerComponent),
             bitsPerPixel: Int(bitsPerPixel),
-            bytesPerRow: Int((ceil(1080/17)) * 4),
+            bytesPerRow: Int((ceil(width)) * 4),
             space: rgbColorSpace,
             bitmapInfo: bitmapInfo,
             provider: providerRef as! CGDataProvider,
@@ -106,15 +158,15 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         return UIImage(cgImage: cgim!)
     }
 
-    func GetTotalColors(height: CGFloat, width: CGFloat) {
+    func GetTotalColors(height: CGFloat, width: CGFloat, sliderValue: Int) {
+//CGFloat(+sliderValue)
 
 
-
-        for i in stride(from: 0 as CGFloat, to: (height), by: +17 as CGFloat) {
+        for i in stride(from: 0 as CGFloat, to: (height), by: CGFloat(+sliderValue)) {
 
             var newOne = [PixelData]()
 
-            for j in stride(from: 0 as CGFloat, to: (width), by: +17 as CGFloat) {
+            for j in stride(from: 0 as CGFloat, to: (width), by: CGFloat(+sliderValue)) {
 
                 let cgPoint = CGPoint.init(x: i, y: j)
 
@@ -125,8 +177,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
                 
                 //print("tokennn=",check)
                 var totalPixelInfo = [Int]()
-                for widthInc in 0..<17 {
-                    for rowInc in 0..<17 {
+                for widthInc in 0..<sliderValue {
+                    for rowInc in 0..<sliderValue {
 
 
                             let checkWid = ((CGFloat(widthInc) * (width - 1)) + (j + CGFloat(rowInc)))
