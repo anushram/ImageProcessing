@@ -78,12 +78,14 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]){
-            if let img = info[.originalImage] as? UIImage {
+        if let img = info[.originalImage] as? UIImage {
                 
                 iiiimmmmm.isHidden = false
                 iiiimmmmm.image = img
-                var cgimg = img.cgImage
-                pixelData = cgimg!.dataProvider!.data
+                self.img = img
+                let cgimg = self.img!.cgImage
+                print(cgimg!.colorSpace)
+                print(cgimg!.colorSpace?.numberOfComponents)
                 print("total sizeees=",cgimg?.width, cgimg?.height)
                 sizeImg.text = "\(cgimg!.width) X \(cgimg!.height)"
                 self.dismiss(animated: true, completion: { () -> Void in
@@ -94,15 +96,20 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         }
     
     @IBAction func doneAction(sender: UIButton){
-        let cgimg = iiiimmmmm.image!.cgImage
+        let cgimg = self.img!.cgImage
+        pixelData = cgimg!.dataProvider!.data
         let sValue = Int(cusSlider.value)
-        self.GetTotalColors(height: CGFloat(cgimg!.height), width: CGFloat(cgimg!.width), sliderValue: sValue)
-        let immmmmmmm = self.imageFromARGB32Bitmap(pixels: self.piii, width: CGFloat(cgimg!.width/sValue), height: CGFloat(cgimg!.height/sValue), cgImage: cgimg!)
+        print(cgimg!.colorSpace)
+        //self.GetTotalColors(height: CGFloat(cgimg!.height), width: CGFloat(cgimg!.width))
+        self.GetTotalColors(height: CGFloat(cgimg!.height), width: CGFloat(cgimg!.width), sliderValue: CGFloat(sValue))
+        //let immmmmmmm = self.imageFromARGB32Bitmap(pixels: self.piii, width: CGFloat(cgimg!.width * 2), height: CGFloat(cgimg!.height * 2), cgImage: cgimg!)
+        let immmmmmmm = self.imageFromARGB32Bitmap(pixels: self.piii, width: CGFloat(CGFloat(cgimg!.width)/CGFloat(sValue)), height: CGFloat(CGFloat(cgimg!.height)/CGFloat(sValue)), cgImage: cgimg!)
         let cgimgModified = immmmmmmm.cgImage
         print("total sizeees=",cgimgModified!.width, cgimgModified!.height)
         sizeImg.text = "\(cgimgModified!.width) X \(cgimgModified!.height)"
         iiiimmmmm.image = immmmmmmm
         UIImageWriteToSavedPhotosAlbum(immmmmmmm, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        
     }
     
     @IBAction func sliderValueChanged(slider: UISlider){
@@ -122,14 +129,15 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     }
     
     private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+    private let rgbColorSpaceD = CGColorSpace.init(name: CGColorSpace.displayP3)
     
     
     private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
         .union(.byteOrder32Little)
     public func imageFromARGB32Bitmap(pixels:[PixelData], width:CGFloat, height:CGFloat, cgImage: CGImage)->UIImage{
         
-        let bitsPerComponent:UInt = 8
-        let bitsPerPixel:UInt = 32
+        let bitsPerComponent:UInt = UInt(cgImage.bitsPerComponent)
+        let bitsPerPixel:UInt = UInt(cgImage.bitsPerPixel)
         //assert(pixels.count == Int((width * height)) )
         var data = pixels // Copy to mutable []
         
@@ -138,14 +146,14 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
            let providerRef = CGDataProvider(
             data:dataONe)
         //CFDataCreateMutable(kCFAllocatorDefault, data.count * MemoryLayout<Any>.size)
-
+        
         let cgim = CGImage(
             width: Int(ceil(width)),
             height: Int(ceil(height)),
             bitsPerComponent: Int(bitsPerComponent),
             bitsPerPixel: Int(bitsPerPixel),
             bytesPerRow: Int((ceil(width)) * 4),
-            space: rgbColorSpace,
+            space: cgImage.colorSpace ?? rgbColorSpace,
             bitmapInfo: bitmapInfo,
             provider: providerRef as! CGDataProvider,
             decode: nil,
@@ -158,34 +166,40 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         return UIImage(cgImage: cgim!)
     }
 
-    func GetTotalColors(height: CGFloat, width: CGFloat, sliderValue: Int) {
+    func GetTotalColors(height: CGFloat, width: CGFloat, sliderValue: CGFloat) {
 //CGFloat(+sliderValue)
+        
+        var subSlider = 0
+        var subSliderOne = 0
 
-
-        for i in stride(from: 0 as CGFloat, to: (height), by: CGFloat(+sliderValue)) {
+        for i in stride(from: 0 as CGFloat, to: (height), by: +sliderValue) {
+        //for i in stride(from: height, to: 0, by: CGFloat(-sliderValue)) {
 
             var newOne = [PixelData]()
-
-            for j in stride(from: 0 as CGFloat, to: (width), by: CGFloat(+sliderValue)) {
+            subSliderOne = Int(i + sliderValue)
+            for j in stride(from: 0 as CGFloat, to: (width), by: +sliderValue) {
+            //for j in stride(from: (width), to: 0, by: CGFloat(-sliderValue)) {
 
                 let cgPoint = CGPoint.init(x: i, y: j)
 
                 let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
                 //As per row and column, we get all pixel values
                 let check = (Int(width) * Int(i)) + Int(j)
-                
-                
+
+                subSlider  = Int(j) + Int(sliderValue)
                 //print("tokennn=",check)
                 var totalPixelInfo = [Int]()
-                for widthInc in 0..<sliderValue {
-                    for rowInc in 0..<sliderValue {
+                var rowIncTag = 0
+                var widthIncTag = 0
+                for widthInc in Int(i)..<Int(subSliderOne) {
+                    for rowInc in Int(j)..<Int(subSlider) {
 
 
-                            let checkWid = ((CGFloat(widthInc) * (width - 1)) + (j + CGFloat(rowInc)))
-                            let remainder = CGFloat( checkWid / ((CGFloat(widthInc) * (width - 1)) + (width - 1)))
-                        let a = (CGFloat(rowInc) * (height - 1))
-                        let checkhgt = a + (i + CGFloat(widthInc))
-                        let remainderhgt = CGFloat(checkhgt / ((CGFloat(rowInc) * (height - 1)) + (height - 1)))
+                            let checkWid = ((CGFloat(widthIncTag) * (width - 1)) + (j + CGFloat(rowIncTag)))
+                            let remainder = CGFloat( checkWid / ((CGFloat(widthIncTag) * (width - 1)) + (width - 1)))
+                        let a = (CGFloat(rowIncTag) * (height - 1))
+                        let checkhgt = a + (i + CGFloat(widthIncTag))
+                        let remainderhgt = CGFloat(checkhgt / ((CGFloat(rowIncTag) * (height - 1)) + (height - 1)))
 
                             if remainder > 1 {
                                 continue
@@ -193,11 +207,15 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
                                 continue
                             }
                             else{
-                                let pixelInfo: Int = ((Int(width) * Int(i + CGFloat(widthInc))) + Int(j + CGFloat(rowInc))) * 4
+                                let pixelInfo: Int = ((Int(width) * Int(i + CGFloat(widthIncTag))) + Int(j + CGFloat(rowIncTag))) * 4
                                 totalPixelInfo.append(pixelInfo)
                             }
+                        
+                        rowIncTag += 1
 
                     }
+                    rowIncTag = 0
+                    widthIncTag += 1
                 }
 
                 //Arrange color by pixel data
@@ -219,15 +237,22 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
                     blueTotal += Int(pixel.b)
                     alphaTotal += Int(pixel.a)
                 }
-
+                
                 let avgR = UInt8(redTotal/totalPixelData.count)
                 let avgG = UInt8(greenTotal/totalPixelData.count)
                 let avgB = UInt8(blueTotal/totalPixelData.count)
                 let avgA = UInt8(alphaTotal/totalPixelData.count)
+                
+                if totalPixelData.count != 0 {
+                    let picc = PixelData.init(r: avgR, g: avgG, b: avgB, a: avgA)
 
-                let picc = PixelData.init(r: avgR, g: avgG, b: avgB, a: avgA)
+                    newOne.append(picc)
+                }else{
+                    let picc = PixelData.init(r: 0, g: 0, b: 0, a: 0)
+                    newOne.append(picc)
+                }
 
-                newOne.append(picc)
+                
 
 //                let pixelInfo: Int = ((Int(width) * Int(i)) + Int(j)) * 4
 //                let pixelInfoOne: Int = ((Int(width) * Int(i)) + Int(j + 1)) * 4
@@ -320,6 +345,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
 
 
             }
+                subSlider = 0
                 piii.append(contentsOf: newOne)
 
         }
@@ -392,16 +418,16 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
 //        }
 //
 //    }
-    /*Enlarge Image
+    /*
     func GetTotalColors(height: CGFloat, width: CGFloat) {
         
+        piii.removeAll()
         
-        
-        for i in stride(from: 0 as CGFloat, to: (height), by: +2 as CGFloat) {
+        for i in stride(from: height as CGFloat, to: 0, by: -1 as CGFloat) {
             
             var newOne = [PixelData]()
             
-            for j in stride(from: 0 as CGFloat, to: (width), by: +2 as CGFloat) {
+            for j in stride(from: width as CGFloat, to: 0, by: -1 as CGFloat) {
                 
                 let cgPoint = CGPoint.init(x: i, y: j)
                 
@@ -412,15 +438,17 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
                 let piccOne = PixelData.init(r: data[pixelInfo+2], g: data[pixelInfo+1], b: data[pixelInfo], a: data[pixelInfo+3])
         
                     newOne.append(piccOne)
+                    newOne.append(piccOne)
                 
                 
             }
+                piii.append(contentsOf: newOne)
                 piii.append(contentsOf: newOne)
             
         }
         
     }
-*/
+    */
 }
 
 
