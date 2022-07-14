@@ -23,6 +23,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        /*
         img = UIImage.init(named: "sample")
         var cccGImage = img?.cgImage!
         pixelData = cccGImage!.dataProvider!.data
@@ -39,14 +40,13 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         let colorpp = img?.getPixelColor(pos: cgPoint, pixelData: self.pixelData!)
         print("sssss",colorpp)
         
-//        self.GetTotalColors(height: CGFloat(cccGImage!.height), width: CGFloat(cccGImage!.width), sliderValue: 1)
-//        let immmmmmmm = self.imageFromARGB32Bitmap(pixels: self.piii, width: UInt(cccGImage!.width), height: UInt(cccGImage!.height), cgImage: cccGImage!)
-//        var cgggggimmmm = immmmmmmm.cgImage
-//        print("total sizeees=",cgggggimmmm?.width, cgggggimmmm?.height)
-//        iiiimmmmm.image = immmmmmmm
-        //UIImageWriteToSavedPhotosAlbum(immmmmmmm, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-       // let processedImage = img?.processPixels(in: img!)
-       // iiiimmmmm.image = processedImage
+        self.GetTotalColors(height: CGFloat(cccGImage!.height), width: CGFloat(cccGImage!.width))
+        let immmmmmmm = self.imageFromARGB32BitmapNewRatio(pixels: self.piii, width: CGFloat(cccGImage!.width), height: CGFloat(cccGImage!.height), cgImage: cccGImage!)
+        var cgggggimmmm = immmmmmmm.cgImage
+        print("total sizeees=",cgggggimmmm?.width, cgggggimmmm?.height)
+        iiiimmmmm.image = immmmmmmm
+        UIImageWriteToSavedPhotosAlbum(immmmmmmm, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        */
     }
     
     //MARK: - Add image to Library
@@ -121,12 +121,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         print("slider1=",slider.value)
     }
     
-    public struct PixelData {
-        var r:UInt8
-        var g:UInt8
-        var b:UInt8
-        var a:UInt8
-    }
+    
     
     private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
     private let rgbColorSpaceD = CGColorSpace.init(name: CGColorSpace.displayP3)
@@ -351,73 +346,68 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         }
 
     }
-//    func GetTotalColors(height: CGFloat, width: CGFloat) {
-//
-//
-//
-//        for i in stride(from: 0 as CGFloat, to: (height), by: +1 as CGFloat) {
-//
-//            var newOne = [PixelData]()
-//
-//            var newMode = 0.0
-//            var perceOne = 0.00
-//
-//            var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-//
-//            var dataDupe = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
-//            dataDupe = UnsafeMutablePointer(mutating: data)
-//
-//            for j in stride(from: 0 as CGFloat, to: (1000), by: +1 as CGFloat) {
-//
-//                let cgPoint = CGPoint.init(x: i, y: j)
-//
-//
-//
-//                let pixelInfo: Int = ((Int(width) * Int(i)) + Int(j)) * 4
-//
-//                let pixelInfoOne: Int = ((Int(width) * Int(i)) + Int(j + 1)) * 4
-//
-//
-//                  let dataOriginal = Double(Int(dataDupe[pixelInfo+2]))
-//
-//                  let dataRow1 = Double(dataOriginal) - Double(0.08 * dataOriginal * (Double(j) + 1))
-//
-//                  let dataOriginalNext = Double(Int(dataDupe[pixelInfoOne+2]))
-//
-//                  let dataRow2 = Double(0.08 * Double(dataOriginalNext)) - (Double(0.08 * Double(dataOriginalNext) - Double(0.08 * dataOriginalNext) * (Double(j) + 1)))
-//
-//                  let rRGB = dataRow1 + dataRow2
-//
-//
-//
-//
-//
-//
-//
-////                let dataG1 = Double(Int(data[pixelInfo+1]))
-////                let dataG2 = Double(Int(data[pixelInfoOne+1]))
-////                let gRGB = Double(dataG1 - (Double(0.08) * dataG1) * perceOne) + (0.08 * dataG2) * (Double(j) + 1)
-////
-////                let dataB1 = Double(Int(data[pixelInfo]))
-////                let dataB2 = Double(Int(data[pixelInfoOne]))
-////                let bRGB = Double(dataB1 - (Double(0.08) * dataB1) * perceOne) + (0.08 * dataB2) * (Double(j) + 1)
-////
-////                let dataA1 = Double(Int(data[pixelInfo+3]))
-////                let dataA2 = Double(Int(data[pixelInfoOne+3]))
-////                let aRGB = Double(dataA1 - (Double(0.08) * dataA1) * perceOne) + (0.08 * dataA2) * (Double(j) + 1)
-//
-//                let piccOne = PixelData.init(r: UInt8(rRGB), g: UInt8(rRGB), b: UInt8(rRGB), a: UInt8(rRGB))
-//
-//                    newOne.append(piccOne)
-//
-//
-//            }
-//                //piii.append(contentsOf: newOne)
-//                piii.append(contentsOf: newOne)
-//
-//        }
-//
-//    }
+    //New Ratio:- Algorithm
+    func GetTotalColors(height: CGFloat, width: CGFloat) {
+
+        for i in stride(from: 0 as CGFloat, to: (height), by: +1 as CGFloat) {
+
+            var newOne = [PixelData]()
+
+            for j in stride(from: 0 as CGFloat, to: (width), by: +1 as CGFloat) {
+
+
+                let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+
+                let pixelInfo: Int = ((Int(width) * Int(i)) + Int(j)) * 4
+
+                let sRed = CGFloat(data[pixelInfo+2]) * 0.5 
+                let sGreen = CGFloat(data[pixelInfo+1]) * 0.5
+                let sBlue = CGFloat(data[pixelInfo]) * 0.5
+                let sAlpha = CGFloat(data[pixelInfo+3])
+
+                let piccOne = PixelData.init(r: UInt8(sRed), g: UInt8(sGreen), b: UInt8(sBlue), a: UInt8(sAlpha))
+
+                    newOne.append(piccOne)
+
+
+            }
+                //piii.append(contentsOf: newOne)
+                piii.append(contentsOf: newOne)
+
+        }
+
+    }
+    public func imageFromARGB32BitmapNewRatio(pixels:[PixelData], width:CGFloat, height:CGFloat, cgImage: CGImage)->UIImage{
+        
+        let bitsPerComponent:UInt = UInt(cgImage.bitsPerComponent)
+        let bitsPerPixel:UInt = UInt(cgImage.bitsPerPixel)
+        //assert(pixels.count == Int((width * height)) )
+        var data = pixels // Copy to mutable []
+        
+        //let abc = CFDataCreateMutable(kCFAllocatorDefault, data.count * MemoryLayout<Any>.size)
+        let dataONe = NSData(bytes: &data, length: data.count * 4)
+           let providerRef = CGDataProvider(
+            data:dataONe)
+        //CFDataCreateMutable(kCFAllocatorDefault, data.count * MemoryLayout<Any>.size)
+        
+        let cgim = CGImage(
+            width: Int(ceil(width/2)),
+            height: Int(ceil(height)),
+            bitsPerComponent: Int(bitsPerComponent),
+            bitsPerPixel: Int(bitsPerPixel),
+            bytesPerRow: Int((ceil(width/2)) * 4),
+            space: cgImage.colorSpace ?? rgbColorSpace,
+            bitmapInfo: bitmapInfo,
+            provider: providerRef as! CGDataProvider,
+            decode: nil,
+            shouldInterpolate: true,
+            intent: CGColorRenderingIntent.defaultIntent
+                )
+        print("cccccccc=",img!.scale)
+        //return UIImage.init(cgImage: cgim!, scale: img!.scale, orientation: .leftMirrored)
+        
+        return UIImage(cgImage: cgim!)
+    }
     /*
     func GetTotalColors(height: CGFloat, width: CGFloat) {
         

@@ -132,3 +132,10 @@ let IS_IPHONE_6 = (IS_IPHONE && SCREEN_MAX_LENGTH == 667.0)
 let IS_IPHONE_6P = (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
 let IS_IPHONE_X = (IS_IPHONE && SCREEN_MAX_LENGTH == 812.0)
 let IS_IPHONE_XMAS = (IS_IPHONE && SCREEN_MAX_LENGTH == 896.0)
+
+public struct PixelData {
+    var r:UInt8
+    var g:UInt8
+    var b:UInt8
+    var a:UInt8
+}
