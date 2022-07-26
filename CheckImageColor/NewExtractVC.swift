@@ -26,8 +26,8 @@ class NewExtractVC: UIViewController {
         self.img3x.image = totalImages[2]
         
         self.txt1x.text = "\(totalImages[0].cgImage!.width) x \(totalImages[0].cgImage!.height)"
-        self.txt2x.text = "\(totalImages[1].cgImage!.width) x \(totalImages[0].cgImage!.height)"
-        self.txt3x.text = "\(totalImages[2].cgImage!.width) x \(totalImages[0].cgImage!.height)"
+        self.txt2x.text = "\(totalImages[1].cgImage!.width) x \(totalImages[1].cgImage!.height)"
+        self.txt3x.text = "\(totalImages[2].cgImage!.width) x \(totalImages[2].cgImage!.height)"
         // Do any additional setup after loading the view.
     }
     

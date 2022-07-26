@@ -139,3 +139,7 @@ public struct PixelData {
     var b:UInt8
     var a:UInt8
 }
+
+enum imageProcess: String{
+    case extract, enlarge
+}

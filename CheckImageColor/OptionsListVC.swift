@@ -13,7 +13,7 @@ class OptionsListVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     // MARK: UITableview Delegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -27,7 +27,12 @@ class OptionsListVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
-        self.performSegue(withIdentifier: "extentionconvert", sender: self)
+        if indexPath.row == 2 {
+            self.performSegue(withIdentifier: "toBypixel", sender: self)
+            return
+        }
+        let imgSource: imageProcess = indexPath.row == 0 ? .enlarge : .extract
+        self.performSegue(withIdentifier: "extentionconvert", sender: imgSource)
     }
 
     override func viewDidLoad() {
@@ -36,6 +41,11 @@ class OptionsListVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         // Do any additional setup after loading the view.
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let view = segue.destination as? ImagePickerVC {
+            view.identifier = sender as! imageProcess
+        }
+    }
     
 
     /*
