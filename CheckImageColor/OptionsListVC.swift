@@ -13,7 +13,7 @@ class OptionsListVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     // MARK: UITableview Delegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -29,6 +29,9 @@ class OptionsListVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         if indexPath.row == 2 {
             self.performSegue(withIdentifier: "toBypixel", sender: self)
+            return
+        }else if indexPath.row == 3 {
+            self.performSegue(withIdentifier: "toAppendingSegue", sender: self)
             return
         }
         let imgSource: imageProcess = indexPath.row == 0 ? .enlarge : .extract
