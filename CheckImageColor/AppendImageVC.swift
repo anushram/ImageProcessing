@@ -30,7 +30,7 @@ class AppendImageVC: UIViewController {
         print(sampImage.image?.averageColor)
         print(sampImage.image?.cgImage?.width, sampImage.image?.cgImage?.height)
         // Do any additional setup after loading the view.
-       let image = GetTotalColors(height: 5, width: 10, ext: 1, cgImage: sampImage.image!.cgImage!)
+       let image = GetTotalColors(height: 9, width: 8, ext: 1, cgImage: sampImage.image!.cgImage!)
         sampImage.image = image
     }
     
@@ -49,16 +49,73 @@ class AppendImageVC: UIViewController {
             sam2.image = image
         print(image?.cgImage?.width, image?.cgImage?.height)
     }
-    
+//MARK: Rectancle
+//    func GetTotalColors(height: CGFloat, width: CGFloat, ext: Int, cgImage: CGImage) -> UIImage {
+//
+//        modifiedPixelData.removeAll()
+//
+//        for i in stride(from: 0  as CGFloat, to: 5, by: +1 as CGFloat) {
+//
+//            var newOne = [PixelData]()
+//
+//            for j in stride(from: 0 as CGFloat, to: 11, by: +1 as CGFloat) {
+//
+//                let cgPoint = CGPoint.init(x: i, y: j)
+//
+//                let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+//
+//
+//                let saImage = UIImage.init(named: "sample")!
+//                let ciComponenet = CIColor.init(color: saImage.averageColor!)
+//
+//                if j > 2 && j <= 7 {
+//
+////                    for k in stride(from: i  as CGFloat, to: i, by: +1 as CGFloat) {
+//
+////                        for l in stride(from: 0  as CGFloat, to: 5, by: +1 as CGFloat) {
+//                            let pixelInfo: Int = ((Int(5) * Int(i)) + Int(j-3)) * 4
+//
+//                            let pixData = PixelData.init(r: data[pixelInfo+2], g: data[pixelInfo+1], b: data[pixelInfo], a: data[pixelInfo+3])
+//                            newOne.append(pixData)
+////                        }
+//
+////                    }
+//
+//                }else if j > 7{
+//                    let pixData = PixelData.init(r: UInt8(ciComponenet.blue * 255), g: UInt8(ciComponenet.green * 255 ), b: UInt8(ciComponenet.red * 255), a: UInt8(ciComponenet.alpha * 255))
+//    //                    let pixData = PixelData.init(r: UInt8(255), g: UInt8(0), b: UInt8(0), a: UInt8(255))
+//
+//                        newOne.append(pixData)
+//                }
+//                else{
+//
+//                   print("redCCC=",(ciComponenet.red * 255))
+//
+//                let pixData = PixelData.init(r: UInt8(ciComponenet.blue * 255), g: UInt8(ciComponenet.green * 255 ), b: UInt8(ciComponenet.red * 255), a: UInt8(ciComponenet.alpha * 255))
+////                    let pixData = PixelData.init(r: UInt8(255), g: UInt8(0), b: UInt8(0), a: UInt8(255))
+//
+//                    newOne.append(pixData)
+//
+//                }
+//
+//
+//            }
+//                modifiedPixelData.append(contentsOf: newOne)
+//
+//
+//        }
+//        return imageFromARGB32Bitmap(pixels: self.modifiedPixelData, width: 11, height: 5, cgImage: cgImage, ext: ext)
+//    }
+    //MARK: Square
     func GetTotalColors(height: CGFloat, width: CGFloat, ext: Int, cgImage: CGImage) -> UIImage {
         
         modifiedPixelData.removeAll()
         
-        for i in stride(from: 0  as CGFloat, to: 5, by: +1 as CGFloat) {
+        for i in stride(from: 0  as CGFloat, to: 8, by: +1 as CGFloat) {
             
             var newOne = [PixelData]()
             
-            for j in stride(from: 0 as CGFloat, to: 11, by: +1 as CGFloat) {
+            for j in stride(from: 0 as CGFloat, to: 8, by: +1 as CGFloat) {
                 
                 let cgPoint = CGPoint.init(x: i, y: j)
                 
@@ -68,12 +125,12 @@ class AppendImageVC: UIViewController {
                 let saImage = UIImage.init(named: "sample")!
                 let ciComponenet = CIColor.init(color: saImage.averageColor!)
                 
-                if j > 2 && j <= 7 {
+                if i > 1 && i <= 6 {
                     
 //                    for k in stride(from: i  as CGFloat, to: i, by: +1 as CGFloat) {
                         
 //                        for l in stride(from: 0  as CGFloat, to: 5, by: +1 as CGFloat) {
-                            let pixelInfo: Int = ((Int(5) * Int(i)) + Int(j-3)) * 4
+                            let pixelInfo: Int = ((Int(8) * Int(i-2)) + Int(j)) * 4
                             
                             let pixData = PixelData.init(r: data[pixelInfo+2], g: data[pixelInfo+1], b: data[pixelInfo], a: data[pixelInfo+3])
                             newOne.append(pixData)
@@ -81,9 +138,9 @@ class AppendImageVC: UIViewController {
                         
 //                    }
                     
-                }else if j > 7{
-                    let pixData = PixelData.init(r: UInt8(ciComponenet.blue * 255), g: UInt8(ciComponenet.green * 255 ), b: UInt8(ciComponenet.red * 255), a: UInt8(ciComponenet.alpha * 255))
-    //                    let pixData = PixelData.init(r: UInt8(255), g: UInt8(0), b: UInt8(0), a: UInt8(255))
+                }else if i > 6{
+                    //let pixData = PixelData.init(r: UInt8(ciComponenet.blue * 255), g: UInt8(ciComponenet.green * 255 ), b: UInt8(ciComponenet.red * 255), a: UInt8(ciComponenet.alpha * 255))
+                        let pixData = PixelData.init(r: UInt8(255), g: UInt8(0), b: UInt8(0), a: UInt8(255))
                     
                         newOne.append(pixData)
                 }
@@ -91,8 +148,8 @@ class AppendImageVC: UIViewController {
                     
                    print("redCCC=",(ciComponenet.red * 255))
                 
-                let pixData = PixelData.init(r: UInt8(ciComponenet.blue * 255), g: UInt8(ciComponenet.green * 255 ), b: UInt8(ciComponenet.red * 255), a: UInt8(ciComponenet.alpha * 255))
-//                    let pixData = PixelData.init(r: UInt8(255), g: UInt8(0), b: UInt8(0), a: UInt8(255))
+               // let pixData = PixelData.init(r: UInt8(ciComponenet.blue * 255), g: UInt8(ciComponenet.green * 255 ), b: UInt8(ciComponenet.red * 255), a: UInt8(ciComponenet.alpha * 255))
+                    let pixData = PixelData.init(r: UInt8(255), g: UInt8(0), b: UInt8(0), a: UInt8(255))
                 
                     newOne.append(pixData)
         
@@ -104,7 +161,7 @@ class AppendImageVC: UIViewController {
             
             
         }
-        return imageFromARGB32Bitmap(pixels: self.modifiedPixelData, width: 11, height: 5, cgImage: cgImage, ext: ext)
+        return imageFromARGB32Bitmap(pixels: self.modifiedPixelData, width: 8, height: 8, cgImage: cgImage, ext: ext)
     }
     
     public func imageFromARGB32Bitmap(pixels:[PixelData], width:CGFloat, height:CGFloat, cgImage: CGImage, ext: Int)->UIImage{
