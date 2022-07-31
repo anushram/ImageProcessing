@@ -16,6 +16,7 @@
 		B71E432927C8A88C00E2DF80 /* CheckImageColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71E432827C8A88C00E2DF80 /* CheckImageColorTests.swift */; };
 		B71E433427C8A88C00E2DF80 /* CheckImageColorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71E433327C8A88C00E2DF80 /* CheckImageColorUITests.swift */; };
 		FC0975B428911F3F00F8D154 /* AppendImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0975B328911F3F00F8D154 /* AppendImageVC.swift */; };
+		FC9EF53B2895A5CB00C5B818 /* OverlayImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9EF53A2895A5CA00C5B818 /* OverlayImageVC.swift */; };
 		FCABA4D12890554400ABF778 /* EditByPixelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCABA4D02890554400ABF778 /* EditByPixelVC.swift */; };
 		FCDF1BBF287C6B6F00DE1D76 /* struct.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDF1BBE287C6B6F00DE1D76 /* struct.swift */; };
 		FCF7612F2880127D00CD629A /* OptionsListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF7612E2880127D00CD629A /* OptionsListVC.swift */; };
@@ -57,6 +58,7 @@
 		B71E433327C8A88C00E2DF80 /* CheckImageColorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckImageColorUITests.swift; sourceTree = "<group>"; };
 		B71E433527C8A88C00E2DF80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC0975B328911F3F00F8D154 /* AppendImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppendImageVC.swift; sourceTree = "<group>"; };
+		FC9EF53A2895A5CA00C5B818 /* OverlayImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayImageVC.swift; sourceTree = "<group>"; };
 		FCABA4D02890554400ABF778 /* EditByPixelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditByPixelVC.swift; sourceTree = "<group>"; };
 		FCDF1BBE287C6B6F00DE1D76 /* struct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = struct.swift; sourceTree = "<group>"; };
 		FCF7612E2880127D00CD629A /* OptionsListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsListVC.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				FCF761342880537500CD629A /* NewExtractVC.swift */,
 				FCABA4D02890554400ABF778 /* EditByPixelVC.swift */,
 				FC0975B328911F3F00F8D154 /* AppendImageVC.swift */,
+				FC9EF53A2895A5CA00C5B818 /* OverlayImageVC.swift */,
 				B71E431727C8A88700E2DF80 /* Main.storyboard */,
 				B71E431A27C8A88B00E2DF80 /* Assets.xcassets */,
 				B71E431C27C8A88B00E2DF80 /* LaunchScreen.storyboard */,
@@ -283,6 +286,7 @@
 				FCF7612F2880127D00CD629A /* OptionsListVC.swift in Sources */,
 				FCDF1BBF287C6B6F00DE1D76 /* struct.swift in Sources */,
 				FCF761352880537500CD629A /* NewExtractVC.swift in Sources */,
+				FC9EF53B2895A5CB00C5B818 /* OverlayImageVC.swift in Sources */,
 				FCABA4D12890554400ABF778 /* EditByPixelVC.swift in Sources */,
 				B71E431627C8A88700E2DF80 /* ViewController.swift in Sources */,
 				FC0975B428911F3F00F8D154 /* AppendImageVC.swift in Sources */,
